@@ -65,7 +65,7 @@ namespace Drawing
         /// <param name="eventData">Pointer Event data.</param>
         public void OnPointerDown (PointerEventData eventData)
         {
-//            Debug.Log("Down");
+            Debug.Log("Down");
             currentPointerEventData = eventData;
             isPointerDown = true;
         }
@@ -159,8 +159,8 @@ namespace Drawing
             imageTexture.Apply();
         }
 
-        private Vector2 previousPosition;
-        public float patternDistance;
+//        private Vector2 previousPosition;
+//        public float patternDistance;
         public void PatternPaint (Vector2 point1, Vector2 point2, Texture2D pattern)
         {
             if (pointerPosition == Vector2.zero)
@@ -170,7 +170,7 @@ namespace Drawing
 
 //            PaintTexture.PatternPaint(point1, point2, (radius / objectScale), (opacity / objectScale), imageTexture, pattern);
 //            imageTexture.Apply();
-            if (previousPosition == pointerPosition)
+            /*if (previousPosition == pointerPosition)
                 return;
             if (previousPosition != Vector2.zero)
                 Debug.Log(Vector2.Distance(previousPosition, pointerPosition));
@@ -186,8 +186,8 @@ namespace Drawing
             
             Texture2D _texture = new Texture2D(0,0);
             _texture.CopyTexture(pattern);
-            image.sprite.CreateSprite(_texture);
-            previousPosition = pointerPosition;
+            image.CreateSprite(_texture);
+            previousPosition = pointerPosition;*/
         }
 
         /// <summary>

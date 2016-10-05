@@ -5,14 +5,21 @@ namespace Drawing.Util
 {
     public static class CanvasUtility
     {
-        public static void CreateSprite (this UnityEngine.Sprite sprite, Texture2D texture)
+        public static Sprite GetSprite (Texture2D texture)
         {
-            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            return UnityEngine.Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         }
 
-        public static void ScreenPointToRectPosition (this UnityEngine.RectTransform rectTransform, Vector2 screenPosition)
+        public static void ScreenPointToRectPosition (this UnityEngine.RectTransform rectTransform, Vector2 screenPosition, float screenRatio = 1f)
         {
-            rectTransform.anchoredPosition = new Vector2(screenPosition.x - ((float)(Screen.width / 2)), screenPosition.y - ((float)(Screen.height/2)));
+            
+            int width = Screen.width / 2;
+            int height = Screen.height / 2;
+
+            float xPos = (screenPosition.x - (float)width) / screenRatio;
+            float yPos = (screenPosition.y - (float)height) / screenRatio;
+
+            rectTransform.anchoredPosition = new Vector2(xPos, yPos);
         }
     }
 }

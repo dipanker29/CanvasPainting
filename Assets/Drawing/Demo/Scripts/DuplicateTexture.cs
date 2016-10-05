@@ -16,13 +16,7 @@ public class DuplicateTexture : MonoBehaviour
         if (image.sprite == null)
             return;
 
-        Sprite sprite = image.sprite;
-
-        Texture2D texture = new Texture2D(0, 0);
-        texture.CopyTexture(sprite.texture);
-
-        image.sprite.CreateSprite(texture);
-
+        image.sprite = CanvasUtility.GetSprite(TextureUtility.CopyTexture(image.sprite.texture));
     }
 
 	// Use this for initialization

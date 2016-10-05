@@ -13,7 +13,7 @@ namespace Drawing
         public Image brush;
         public Color color = Color.white;
         public Texture2D patternImage;
-        public float distance;
+        public float distance = 50f;
 
         private Vector2 brushStart;
         private Vector2 brushEnd;
@@ -56,76 +56,28 @@ namespace Drawing
                 {
                     brush.gameObject.SetActive(false);
                 }
-            }
 
-            /*if(isPointerDown)
-            {
-                if(CurrentRaycastObject() != null)
-                {
-                    if(CurrentGameObject == null)
-                    {
-                        ResetPatternBrush();
-                        CheckRaycastTexture(CurrentRaycastObject());
-                        OnPointerDown();
-                        return;
-                    }
-                    else if (CurrentGameObject != CurrentRaycastObject())
-                    {
-                        if(CheckRaycastTexture(CurrentRaycastObject()))
-                        {
-                            ResetPatternBrush();
-                            OnPointerDown();
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-
-                    brushEnd = CurrentPointerPosition ();
-
-                    if (brushStart == Vector2.zero) { return; }
-
-                    if (brush != null)
-                    {
-                        brush.gameObject.SetActive(true);
-                    }
-
-                    base.PatternPaint(brushEnd, brushPolish, patternImage);
-
-                    brushPolish = brushEnd;
-                }
-                else
-                {
-                    ResetPatternBrush();
-                }
-            }
-            else
-            {
-                CurrentGameObject = null;
                 ResetPatternBrush();
-                if (brush != null && brush.gameObject.activeInHierarchy)
-                {
-                    brush.gameObject.SetActive(false);
-                }
-            }*/
+            }
         }
 
         /// <summary>
-        /// Resets the brush position.
+        /// Resets pattern brush parameter.
         /// </summary>
         void ResetPatternBrush ()
         {
-            brushStart = Vector2.zero;
-            brushEnd = brushStart;
-            brushPolish = brushEnd;
+            if (previousPosition != Vector2.zero)
+            {
+                previousPosition = Vector2.zero;
+            }
         }
 
         float PatternDistance ()
         {
-            float width = (float)patternImage.width;
-            
-            return width / 2f;
+            if (distance == 0)
+                distance = 0.01f;
+
+            return distance;
         }
 
         void CreatePattern (Texture2D pattern)
@@ -139,11 +91,8 @@ namespace Drawing
             Image image = go.AddComponent<Image>();
             go.transform.SetParent(parent, false);
 
-            go.GetComponent<RectTransform>().ScreenPointToRectPosition(pointerPosition);
-
-            Texture2D _texture = new Texture2D(0,0);
-            _texture.CopyTexture(pattern);
-            image.sprite.CreateSprite(_texture);
+            go.GetComponent<RectTransform>().ScreenPointToRectPosition(pointerPosition, image.canvas.scaleFactor);
+            image.sprite = CanvasUtility.GetSprite(TextureUtility.CopyTexture(pattern));
             previousPosition = pointerPosition;
         }
 
