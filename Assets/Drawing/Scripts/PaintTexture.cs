@@ -223,7 +223,53 @@ namespace Drawing
             return tex;
         }
         
-        
+        public static Texture2D FreeSelection(Vector2 from, Vector2 to, float rad, Color col, float hardness, Texture2D tex, Texture2D newtex, bool ignoreAlpha = true){
+            var extent = rad;
+            var stY = Mathf.Clamp(Mathf.Min(from.y, to.y) - extent, 0, tex.height);
+            var stX = Mathf.Clamp(Mathf.Min(from.x, to.x) - extent, 0, tex.width);
+            var endY = Mathf.Clamp(Mathf.Max(from.y, to.y) + extent, 0, tex.height);
+            var endX = Mathf.Clamp(Mathf.Max(from.x, to.x) + extent, 0, tex.width);
+
+            var lengthX = endX - stX;
+            var lengthY = endY - stY;
+
+            var sqrRad2 = (rad + 1) * (rad + 1);
+            Color[] pixels = tex.GetPixels((int)stX, (int)stY, (int)lengthX, (int)lengthY, 0);
+            Color[] newpixels = newtex.GetPixels((int)stX, (int)stY, (int)lengthX, (int)lengthY, 0);
+            var start = new Vector2(stX, stY);
+
+            for (int y = 0; y < (int)lengthY; y++){
+
+                for (int x = 0; x < (int)lengthX; x++){
+
+                    var p = new Vector2(x, y) + start;
+                    var center = p + new Vector2(0.5f, 0.5f);
+                    float dist = (center - PaintMathfx.NearestPointStrict(from, to, center)).sqrMagnitude;
+                    if (dist > sqrRad2){
+                        continue;
+                    }
+                    dist = PaintMathfx.GaussFalloff(Mathf.Sqrt(dist), rad) * hardness;
+
+                    /*Color c;
+                    if (dist > 0){
+                        c = Color.Lerp(pixels[y * (int)lengthX + x], col, dist);
+                    }
+                    else{
+                        c = pixels[y * (int)lengthX + x];
+                    }
+
+                    if (ignoreAlpha == false)
+                    {
+                        c.a = pixels[y * (int)lengthX + x].a;
+                    }*/
+
+                    newpixels[y * (int)lengthX + x] = pixels[y * (int)lengthX + x];
+                }
+            }
+
+            newtex.SetPixels((int)start.x, (int)start.y, (int)lengthX, (int)lengthY, pixels, 0);
+            return tex;
+        }
         
         public class PaintMathfx
         {
